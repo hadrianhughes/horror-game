@@ -5,8 +5,16 @@
   },
   "vertices": [[2,30], [50,25], [30,75], [90,30], [85,60]],
   "sectors": [
-    [[0, "red"], [1, null], [2, "red"]],
-    [[1, "blue"], [3, "blue"], [4, "blue"], [2, null]]
+    {
+      "vertices": [[0, "red"], [1, null], [2, "red"]],
+      "floor": 0,
+      "ceiling": 5
+    },
+    {
+      "vertices": [[1, "blue"], [3, "blue"], [4, "blue"], [2, null]],
+      "floor": 1,
+      "ceiling": 5
+    }
   ],
   "nodes": {
     "a": {
