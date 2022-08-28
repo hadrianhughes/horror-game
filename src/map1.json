@@ -6,12 +6,12 @@
   "vertices": [[2,30], [50,25], [30,75], [90,30], [85,60]],
   "sectors": [
     {
-      "vertices": [[0, "red"], [1, null], [2, "red"]],
+      "walls": [[0, "red"], [1, null], [2, "red"]],
       "floor": 0,
       "ceiling": 5
     },
     {
-      "vertices": [[1, "blue"], [3, "blue"], [4, "blue"], [2, null]],
+      "walls": [[1, "blue"], [3, "blue"], [4, "blue"], [2, null]],
       "floor": 1,
       "ceiling": 5
     }

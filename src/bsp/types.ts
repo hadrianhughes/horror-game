@@ -1,7 +1,10 @@
-import { Dict, Vector } from '../types'
+import { Dict, Vector, Maybe } from '../types'
 
 export type Sector = {
-  vertices: Vector[];
+  walls: {
+    vertex: number;
+    color: Maybe<string>;
+  }[];
   floor: number;
   ceiling: number;
 };

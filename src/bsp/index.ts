@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid'
-import { PartialBSPMap, BSPNode, BSPMap, Vector, GameMap } from './types'
-import { dotProduct, magnitude, roundTo } from './math'
+import { Vector } from '../types'
+import { PartialBSPMap, BSPNode, BSPMap, GameMap } from './types'
+import { dotProduct, magnitude, roundTo } from '../math'
 
 const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
   const { map } = _map

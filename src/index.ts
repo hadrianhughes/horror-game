@@ -1,6 +1,7 @@
 import * as _map from './map1.json'
-import { Vector, GameMap } from './types'
+import { Vector } from './types'
 import { findPlayerNode, mapTreeToMap } from './bsp'
+import { loadMap, MapJSON } from './map'
 
 const c = document.getElementById('root') as HTMLCanvasElement
 const ctx = c.getContext('2d')
@@ -14,7 +15,7 @@ c.height = canvasHeight
 
 const playerPos: Vector = [55, 50]
 
-const map = _map as GameMap
+const map = loadMap(_map as MapJSON)
 
 const bspMap = mapTreeToMap(map)
 const nodeID = findPlayerNode(playerPos, bspMap)
