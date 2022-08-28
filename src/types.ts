@@ -12,6 +12,14 @@ export type BSPNode = {
   nodes?: [BSPNode, BSPNode];
 }
 
+export type BSPMap = {
+  [id: string]: {
+    sector: number;
+    vertices: Vector[];
+    nodes?: [string, string];
+  };
+}
+
 export type GameMap = {
   size: {
     width: number;

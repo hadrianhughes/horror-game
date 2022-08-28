@@ -1,4 +1,5 @@
-import { BSPNode, Vector, GameMap } from './types'
+import { nanoid } from 'nanoid'
+import { BSPNode, BSPMap, Vector, GameMap } from './types'
 import { dotProduct, magnitude, roundTo } from './math'
 
 const _findPlayerNode = (player: Vector, node: BSPNode): BSPNode => {
@@ -54,4 +55,54 @@ export const isPlayerInNode = ([px, py]: Vector, { vertices }: BSPNode): boolean
   }
 
   return roundTo(sum, 2) === 6.28
+}
+
+const bspTreeToMap = (tree: BSPNode, acc: BSPMap): { id: string; map: BSPMap } => {
+  if (!tree.nodes) {
+    const id = nanoid()
+
+    return {
+      id,
+      map: {
+        ...acc,
+        [id]: {
+          sector: tree.sector,
+          vertices: tree.vertices,
+        },
+      },
+    }
+  }
+
+  const [a, b] = tree.nodes
+  const { id: aid, map: aMap } = bspTreeToMap(a, acc)
+  const { id: bid, map: bMap } = bspTreeToMap(b, acc)
+
+  const id = nanoid()
+
+  return {
+    id,
+    map: {
+      ...acc,
+      ...aMap,
+      ...bMap,
+      [id]: {
+        sector: tree.sector,
+        vertices: tree.vertices,
+        nodes: [aid, bid],
+      },
+    },
+  }
+}
+
+export const mapTreeToMap = ({ nodes }: GameMap): { roots: [string, string]; map: BSPMap } => {
+  const { id: aid, map: aMap } = bspTreeToMap(nodes[0], {})
+  const { id: bid, map: bMap } = bspTreeToMap(nodes[1], {})
+
+  return {
+    roots: [aid, bid],
+    map: {
+      ...aMap,
+      ...bMap,
+    },
+  }
 }
