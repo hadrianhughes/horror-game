@@ -116,3 +116,5 @@ export const mapTreeToMap = ({ nodes }: GameMap): BSPMap => {
     },
   }
 }
+
+export { Sector, BSPNode, BSPMapNode, PartialBSPMap, BSPMap, GameMap } from './types'
