@@ -1,6 +1,6 @@
 import * as _map from './map1.json'
 import { Vector, GameMap } from './types'
-import { findPlayerNode, mapTreeToMap } from './render'
+import { findPlayerNode, mapTreeToMap } from './bsp'
 
 const c = document.getElementById('root') as HTMLCanvasElement
 const ctx = c.getContext('2d')
