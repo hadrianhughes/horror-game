@@ -1,41 +1,51 @@
 import { nanoid } from 'nanoid'
-import { BSPNode, BSPMap, Vector, GameMap } from './types'
+import { PartialBSPMap, BSPNode, BSPMap, Vector, GameMap } from './types'
 import { dotProduct, magnitude, roundTo } from './math'
 
-const _findPlayerNode = (player: Vector, node: BSPNode): BSPNode => {
+const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
+  const { map } = _map
+
+  const node = map[id]
+
   if (!node.nodes) {
-    return node
+    return id
   }
 
-  const [a, b] = node.nodes
+  const [aid, bid] = node.nodes
+  const a = map[aid]
+  const b = map[bid]
 
-  if (isPlayerInNode(player, a)) {
-    return _findPlayerNode(player, a)
+  if (isPlayerInNode(player, a.vertices)) {
+    return _findPlayerNode(player, _map, aid)
   }
 
-  if (isPlayerInNode(player, b)) {
-    return _findPlayerNode(player, b)
+  if (isPlayerInNode(player, b.vertices)) {
+    return _findPlayerNode(player, _map, bid)
   }
 
   throw new Error(`Player location (${player[0], player[1]}) is not inside the map`)
 }
 
-export const findPlayerNode = (player: Vector, { nodes }: GameMap): BSPNode => {
-  const [a, b] = nodes
+export const findPlayerNode = (player: Vector, _map: BSPMap): string => {
+  const { roots, map } = _map
 
-  if (isPlayerInNode(player, a)) {
-    return _findPlayerNode(player, a)
+  const [aid, bid] = roots
+  const a = map[aid]
+  const b = map[bid]
+
+  if (isPlayerInNode(player, a.vertices)) {
+    return _findPlayerNode(player, _map, aid)
   }
 
-  if (isPlayerInNode(player, b)) {
-    return _findPlayerNode(player, b)
+  if (isPlayerInNode(player, b.vertices)) {
+    return _findPlayerNode(player, _map, bid)
   }
 
   throw new Error(`Player location (${player[0], player[1]}) is not inside the map.`)
 }
 
 // The sum of the angle from player to vertices will be 360deg (2π) if the player is inside
-export const isPlayerInNode = ([px, py]: Vector, { vertices }: BSPNode): boolean => {
+export const isPlayerInNode = ([px, py]: Vector, vertices: Vector[]): boolean => {
   let sum = 0
 
   for (const index in vertices) {
@@ -57,7 +67,7 @@ export const isPlayerInNode = ([px, py]: Vector, { vertices }: BSPNode): boolean
   return roundTo(sum, 2) === 6.28
 }
 
-const bspTreeToMap = (tree: BSPNode, acc: BSPMap): { id: string; map: BSPMap } => {
+const bspTreeToMap = (tree: BSPNode, acc: PartialBSPMap): { id: string; map: PartialBSPMap } => {
   if (!tree.nodes) {
     const id = nanoid()
 
@@ -94,7 +104,7 @@ const bspTreeToMap = (tree: BSPNode, acc: BSPMap): { id: string; map: BSPMap } =
   }
 }
 
-export const mapTreeToMap = ({ nodes }: GameMap): { roots: [string, string]; map: BSPMap } => {
+export const mapTreeToMap = ({ nodes }: GameMap): BSPMap => {
   const { id: aid, map: aMap } = bspTreeToMap(nodes[0], {})
   const { id: bid, map: bMap } = bspTreeToMap(nodes[1], {})
 

@@ -16,5 +16,6 @@ const playerPos: Vector = [55, 50]
 
 const map = _map as GameMap
 
-console.log(findPlayerNode(playerPos, map))
-console.log(mapTreeToMap(map))
+const bspMap = mapTreeToMap(map)
+const nodeID = findPlayerNode(playerPos, bspMap)
+console.log(bspMap.map[nodeID])

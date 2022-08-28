@@ -1,3 +1,5 @@
+export type Dict<T> = { [key: string]: T }
+
 export type Vector = [number, number]
 
 export type Sector = {
@@ -12,12 +14,17 @@ export type BSPNode = {
   nodes?: [BSPNode, BSPNode];
 }
 
+export type BSPMapNode = {
+  sector: number;
+  vertices: Vector[];
+  nodes?: [string, string];
+}
+
+export type PartialBSPMap = Dict<BSPMapNode>
+
 export type BSPMap = {
-  [id: string]: {
-    sector: number;
-    vertices: Vector[];
-    nodes?: [string, string];
-  };
+  roots: [string, string];
+  map: PartialBSPMap;
 }
 
 export type GameMap = {
