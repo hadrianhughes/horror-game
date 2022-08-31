@@ -2,6 +2,7 @@ import * as _map from './map1.json'
 import { Vector } from './types'
 import { findPlayerNode, mapTreeToMap } from './bsp'
 import { loadMap, MapJSON } from './map'
+import { render } from './render'
 
 const c = document.getElementById('root') as HTMLCanvasElement
 const ctx = c.getContext('2d')
@@ -19,4 +20,5 @@ const map = loadMap(_map as MapJSON)
 
 const bspMap = mapTreeToMap(map)
 const nodeID = findPlayerNode(playerPos, bspMap)
-console.log(bspMap.map[nodeID])
+
+render(bspMap, playerPos)

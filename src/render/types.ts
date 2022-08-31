@@ -10,9 +10,3 @@ export class PixelGrid {
 
   get = (x: number, y: number): Maybe<string> => this.grid[y][x]
 }
-
-export type RenderContext = {
-  canvasContext: CanvasRenderingContext2D;
-  fov: number;
-  pixelGrid: PixelGrid;
-}
