@@ -1,4 +1,4 @@
-import { findPlayerNode, BSPMap } from '../bsp'
+import { findPlayerNode, BSPMap, walkWalls } from '../bsp'
 import { asAngle, rad, subVec, quadrant } from '../math'
 import { Vector } from '../types'
 
@@ -23,19 +23,16 @@ const isVectorInFOV = (v: Vector): boolean => {
 
 export const renderNode = (vertices: Vector[], player: Vector, color: string) => {
   // Find walls between vertices that are visible in the camera
-  for (const index in vertices) {
-    const i = parseInt(index)
-    const j = i + 1 === vertices.length ? 0 : i + 1
-
-    const [ix, iy] = subVec(vertices[i], player)
-    const [jx, jy] = subVec(vertices[j], player)
+  walkWalls(vertices, (v1, v2) => {
+    const [ix, iy] = subVec(v1, player)
+    const [jx, jy] = subVec(v2, player)
 
     const ip: Vector = [ix, -iy]
     const jp: Vector = [jx, -jy]
 
     console.log(isVectorInFOV(ip), isVectorInFOV(jp))
-    if (!(isVectorInFOV(ip) || isVectorInFOV(jp))) continue
-  }
+    if (!(isVectorInFOV(ip) || isVectorInFOV(jp))) return
+  })
 }
 
 export const render = (map: BSPMap, player: Vector) => {
