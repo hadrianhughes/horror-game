@@ -10,14 +10,18 @@ export type Sector = {
 };
 
 export type BSPNode = {
-  sector: number;
   vertices: Vector[];
+  floor: number;
+  ceiling: number;
+  walls: [number, number, Maybe<string>][];
   nodes?: [BSPNode, BSPNode];
 }
 
 export type BSPMapNode = {
-  sector: number;
   vertices: Vector[];
+  floor: number;
+  ceiling: number;
+  walls: [number, number, Maybe<string>][];
   nodes?: [string, string];
 }
 

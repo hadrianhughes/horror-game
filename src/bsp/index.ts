@@ -79,8 +79,10 @@ const bspTreeToMap = (tree: BSPNode, acc: PartialBSPMap): { id: string; map: Par
       map: {
         ...acc,
         [id]: {
-          sector: tree.sector,
           vertices: tree.vertices,
+          floor: tree.floor,
+          ceiling: tree.ceiling,
+          walls: tree.walls,
         },
       },
     }
@@ -99,8 +101,10 @@ const bspTreeToMap = (tree: BSPNode, acc: PartialBSPMap): { id: string; map: Par
       ...aMap,
       ...bMap,
       [id]: {
-        sector: tree.sector,
         vertices: tree.vertices,
+        floor: tree.floor,
+        ceiling: tree.ceiling,
+        walls: tree.walls,
         nodes: [aid, bid],
       },
     },
