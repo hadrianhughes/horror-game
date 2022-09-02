@@ -32,6 +32,8 @@ const isVectorInFOV = (v: Vector): boolean => {
 export const renderNode = (node: BSPMapNode, player: Vector) => {
   // Find walls between vertices that are visible in the camera
   for (const [v1, v2, color] of node.walls) {
+    if (!color) continue
+
     const [ix, iy] = subVec(node.vertices[v1], player)
     const [jx, jy] = subVec(node.vertices[v2], player)
 
