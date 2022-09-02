@@ -1,6 +1,6 @@
 import { findPlayerNode, BSPMap, BSPMapNode } from '../bsp'
 import { residue } from '../math'
-import { rad, subVec, quadrant } from '../math/geometry'
+import { rad, subVec, Quadrant, quadrant } from '../math/geometry'
 import { eqSets } from '../math'
 import { Vector } from '../types'
 
@@ -13,13 +13,13 @@ const isVectorInFOV = (v: Vector): boolean => {
   const q = quadrant(v)
   const ccAngle: number = (() => {
     switch (q) {
-      case 1:
+      case Quadrant.Q1:
         return theta
-      case 2:
+      case Quadrant.Q2:
         return Math.PI - theta
-      case 3:
+      case Quadrant.Q3:
         return Math.PI + theta
-      case 4:
+      case Quadrant.Q4:
         return 2 * Math.PI - theta
     }
   })()
@@ -43,7 +43,7 @@ export const renderNode = (node: BSPMapNode, player: Vector) => {
     const qip = quadrant(ip)
     const qjp = quadrant(jp)
 
-    const wallAcrossFOV = eqSets(new Set([qip, qjp]), new Set([1, 2]))
+    const wallAcrossFOV = eqSets(new Set([qip, qjp]), new Set([Quadrant.Q1, Quadrant.Q2]))
 
     if (!(wallAcrossFOV || isVectorInFOV(ip) || isVectorInFOV(jp))) {
       continue

@@ -13,9 +13,11 @@ export const addVec = ([ax, ay]: Vector, [bx, by]: Vector): Vector => [ax + bx, 
 export const subVec = (a: Vector, [bx, by]: Vector): Vector => addVec(a, [-bx, -by])
 
 // Starting from the vertical
-export const quadrant = ([x, y]: Vector): (1 | 2 | 3 | 4) => {
-  if (x <= 0 && y > 0) return 1
-  if (x <= 0 && y <= 0) return 2
-  if (x > 0 && y <= 0) return 3
-  if (x > 0 && y > 0) return 4
+export enum Quadrant { Q1, Q2, Q3, Q4 }
+
+export const quadrant = ([x, y]: Vector): Quadrant => {
+  if (x <= 0 && y > 0) return Quadrant.Q1
+  if (x <= 0 && y <= 0) return Quadrant.Q2
+  if (x > 0 && y <= 0) return Quadrant.Q3
+  if (x > 0 && y > 0) return Quadrant.Q4
 }
