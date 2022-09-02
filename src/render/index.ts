@@ -1,6 +1,7 @@
 import { findPlayerNode, BSPMap, walkWalls } from '../bsp'
 import { residue } from '../math'
 import { rad, subVec, quadrant } from '../math/geometry'
+import { eqSets } from '../math'
 import { Vector } from '../types'
 
 const FOV = rad(45)
@@ -40,7 +41,7 @@ export const renderNode = (vertices: Vector[], player: Vector, color: string) =>
     const qip = quadrant(ip)
     const qjp = quadrant(jp)
 
-    const wallAcrossFOV = (qip === 1 && qjp === 2) || (qip === 2 && qjp === 1)
+    const wallAcrossFOV = eqSets(new Set([qip, qjp]), new Set([1, 2]))
 
     if (!(wallAcrossFOV || isVectorInFOV(ip) || isVectorInFOV(jp))) {
       return
