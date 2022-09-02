@@ -1,5 +1,6 @@
 import { findPlayerNode, BSPMap, walkWalls } from '../bsp'
-import { residue, rad, subVec, quadrant } from '../math'
+import { residue } from '../math'
+import { rad, subVec, quadrant } from '../math/geometry'
 import { Vector } from '../types'
 
 const FOV = rad(45)
