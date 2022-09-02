@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
 import { Vector } from '../types'
-import { PartialBSPMap, BSPNode, BSPMap, GameMap } from './types'
+import { PartialBSPMap, BSPNode, BSPMap, BSPMapNode, GameMap } from './types'
 import { roundTo } from '../math'
 import { dot, magnitude } from '../math/geometry'
 
@@ -17,11 +17,11 @@ const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
   const a = map[aid]
   const b = map[bid]
 
-  if (isPlayerInNode(player, a.vertices)) {
+  if (isPlayerInNode(player, a)) {
     return _findPlayerNode(player, _map, aid)
   }
 
-  if (isPlayerInNode(player, b.vertices)) {
+  if (isPlayerInNode(player, b)) {
     return _findPlayerNode(player, _map, bid)
   }
 
@@ -35,39 +35,31 @@ export const findPlayerNode = (player: Vector, _map: BSPMap): string => {
   const a = map[aid]
   const b = map[bid]
 
-  if (isPlayerInNode(player, a.vertices)) {
+  if (isPlayerInNode(player, a)) {
     return _findPlayerNode(player, _map, aid)
   }
 
-  if (isPlayerInNode(player, b.vertices)) {
+  if (isPlayerInNode(player, b)) {
     return _findPlayerNode(player, _map, bid)
   }
 
   throw new Error(`Player location (${player[0], player[1]}) is not inside the map.`)
 }
 
-export const walkWalls = (vertices: Vector[], f: (v1: Vector, v2: Vector) => void) => {
-  for (const index in vertices) {
-    const i = parseInt(index)
-    const j = i + 1 === vertices.length ? 0 : i + 1
-
-    f(vertices[i], vertices[j])
-  }
-}
-
 // The sum of the angle from player to vertices will be 360deg (2π) if the player is inside
-export const isPlayerInNode = ([px, py]: Vector, vertices: Vector[]): boolean => {
-  let sum = 0
+export const isPlayerInNode = ([px, py]: Vector, node: BSPMapNode): boolean => {
+  const angleSum: number = node.walls.reduce((acc, [v1, v2, _]) => {
+    const [ix, iy] = node.vertices[v1]
+    const [jx, jy] = node.vertices[v2]
 
-  walkWalls(vertices, ([ix, iy], [jx, jy]) => {
     const pi: Vector = [px - ix, py - iy]
     const pj: Vector = [px - jx, py - jy]
 
     const innerAngle = Math.acos(dot(pi, pj) / (magnitude(pi) * magnitude(pj)))
-    sum += innerAngle
-  })
+    return acc + innerAngle
+  }, 0)
 
-  return roundTo(sum, 2) === 6.28
+  return roundTo(angleSum, 2) === 6.28
 }
 
 const bspTreeToMap = (tree: BSPNode, acc: PartialBSPMap): { id: string; map: PartialBSPMap } => {
