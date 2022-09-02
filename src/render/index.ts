@@ -10,10 +10,16 @@ const isVectorInFOV = (v: Vector): boolean => {
 
   const q = quadrant(v)
   const ccAngle: number = (() => {
-    if (q === 1) return theta
-    if (q === 2) return Math.PI - theta
-    if (q === 3) return Math.PI + theta
-    if (q === 4) return 2 * Math.PI - theta
+    switch (q) {
+      case 1:
+        return theta
+      case 2:
+        return Math.PI - theta
+      case 3:
+        return Math.PI + theta
+      case 4:
+        return 2 * Math.PI - theta
+    }
   })()
 
   const adjAngle = ccAngle + FOV / 2
