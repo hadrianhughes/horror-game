@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
 import { Vector } from '../types'
 import { PartialBSPMap, BSPNode, BSPMap, GameMap } from './types'
-import { dotProduct, magnitude, roundTo } from '../math'
+import { dot, magnitude, roundTo } from '../math'
 
 const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
   const { map } = _map
@@ -62,7 +62,7 @@ export const isPlayerInNode = ([px, py]: Vector, vertices: Vector[]): boolean =>
     const pi: Vector = [px - ix, py - iy]
     const pj: Vector = [px - jx, py - jy]
 
-    const innerAngle = Math.acos(dotProduct(pi, pj) / (magnitude(pi) * magnitude(pj)))
+    const innerAngle = Math.acos(dot(pi, pj) / (magnitude(pi) * magnitude(pj)))
     sum += innerAngle
   })
 
