@@ -25,4 +25,4 @@ export const quadrant = ([x, y]: Vector): (1 | 2 | 3 | 4) => {
   if (x > 0 && y > 0) return 4
 }
 
-export const asAngle = (x: number): number => x % (2 * Math.PI)
+export const residue = (x: number, mod: number): number => x % mod

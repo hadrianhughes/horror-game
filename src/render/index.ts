@@ -1,5 +1,5 @@
 import { findPlayerNode, BSPMap, walkWalls } from '../bsp'
-import { asAngle, rad, subVec, quadrant } from '../math'
+import { residue, rad, subVec, quadrant } from '../math'
 import { Vector } from '../types'
 
 const FOV = rad(45)
@@ -18,7 +18,7 @@ const isVectorInFOV = (v: Vector): boolean => {
 
   const adjAngle = ccAngle + FOV / 2
 
-  return asAngle(adjAngle) < FOV
+  return residue(adjAngle, 2 * Math.PI) < FOV
 }
 
 export const renderNode = (vertices: Vector[], player: Vector, color: string) => {
