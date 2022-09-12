@@ -1,4 +1,5 @@
-import { Dict, Vector, Maybe } from '../types'
+import { vec2 } from 'gl-matrix'
+import { Dict, Maybe } from '../types'
 
 export type Sector = {
   walls: {
@@ -12,7 +13,7 @@ export type Sector = {
 export type Wall = [number, number, Maybe<string>]
 
 export type BSPNode = {
-  vertices: Vector[];
+  vertices: vec2[];
   floor: number;
   ceiling: number;
   walls: Wall[];
@@ -20,7 +21,7 @@ export type BSPNode = {
 }
 
 export type BSPMapNode = {
-  vertices: Vector[];
+  vertices: vec2[];
   floor: number;
   ceiling: number;
   walls: Wall[];
@@ -39,7 +40,7 @@ export type GameMap = {
     width: number;
     height: number;
   };
-  vertices: Vector[];
+  vertices: vec2[];
   sectors: Sector[];
   nodes: [BSPNode, BSPNode];
 }

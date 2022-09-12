@@ -1,5 +1,6 @@
+import { vec2 } from 'gl-matrix'
 import { BSPNode, GameMap } from './bsp'
-import { Maybe, Vector } from './types'
+import { Maybe } from './types'
 
 export type SectorJSON = {
   walls: [number, Maybe<string>][];
@@ -12,7 +13,7 @@ export type MapJSON = {
     width: number;
     height: number;
   };
-  vertices: Vector[];
+  vertices: vec2[];
   sectors: SectorJSON[];
   nodes: [BSPNode, BSPNode];
 }

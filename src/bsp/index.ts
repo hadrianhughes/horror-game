@@ -1,10 +1,9 @@
+import { vec2 } from 'gl-matrix'
 import { nanoid } from 'nanoid'
-import { Vector } from '../types'
 import { PartialBSPMap, BSPNode, BSPMap, BSPMapNode, GameMap } from './types'
 import { roundTo } from '../math'
-import { dot, magnitude } from '../math/geometry'
 
-const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
+const _findPlayerNode = (player: vec2, _map: BSPMap, id: string): string => {
   const { map } = _map
 
   const node = map[id]
@@ -28,7 +27,7 @@ const _findPlayerNode = (player: Vector, _map: BSPMap, id: string): string => {
   throw new Error(`Player location (${player[0], player[1]}) is not inside the map`)
 }
 
-export const findPlayerNode = (player: Vector, _map: BSPMap): string => {
+export const findPlayerNode = (player: vec2, _map: BSPMap): string => {
   const { roots, map } = _map
 
   const [aid, bid] = roots
@@ -47,16 +46,15 @@ export const findPlayerNode = (player: Vector, _map: BSPMap): string => {
 }
 
 // The sum of the angle from player to vertices will be 360deg (2π) if the player is inside
-export const isPlayerInNode = ([px, py]: Vector, node: BSPMapNode): boolean => {
+export const isPlayerInNode = (player: vec2, node: BSPMapNode): boolean => {
   const angleSum: number = node.walls.reduce((acc, [v1, v2, _]) => {
-    const [ix, iy] = node.vertices[v1]
-    const [jx, jy] = node.vertices[v2]
+    const i = node.vertices[v1]
+    const j = node.vertices[v2]
 
-    const pi: Vector = [px - ix, py - iy]
-    const pj: Vector = [px - jx, py - jy]
+    const pi = vec2.subtract(vec2.create(), player, i)
+    const pj = vec2.subtract(vec2.create(), player, j)
 
-    const innerAngle = Math.acos(dot(pi, pj) / (magnitude(pi) * magnitude(pj)))
-    return acc + innerAngle
+    return acc + vec2.angle(pi, pj)
   }, 0)
 
   return roundTo(angleSum, 2) === 6.28

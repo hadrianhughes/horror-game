@@ -1,5 +1,5 @@
+import { vec2 } from 'gl-matrix'
 import * as _map from './map1.json'
-import { Vector } from './types'
 import { mapTreeToMap } from './bsp'
 import { loadMap, MapJSON } from './map'
 import { render } from './render'
@@ -13,7 +13,7 @@ const canvasHeight = canvasWidth / canvasRatio
 c.width = canvasWidth
 c.height = canvasHeight
 
-const playerPos: Vector = [55, 50]
+const playerPos = vec2.fromValues(55, 50)
 
 const map = loadMap(_map as MapJSON)
 
