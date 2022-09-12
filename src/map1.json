@@ -32,10 +32,10 @@
       "floor": 1,
       "ceiling": 5,
       "walls": [
-        [0, 1, "blue"],
+        [0, 1, null],
         [1, 2, "blue"],
         [2, 3, "blue"],
-        [3, 0, null]
+        [3, 0, "blue"]
       ]
     }
   ]
