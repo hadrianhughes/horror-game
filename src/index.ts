@@ -1,6 +1,6 @@
 import * as _map from './map1.json'
 import { Vector } from './types'
-import { findPlayerNode, mapTreeToMap } from './bsp'
+import { mapTreeToMap } from './bsp'
 import { loadMap, MapJSON } from './map'
 import { render } from './render'
 
@@ -18,6 +18,5 @@ const playerPos: Vector = [55, 50]
 const map = loadMap(_map as MapJSON)
 
 const bspMap = mapTreeToMap(map)
-const nodeID = findPlayerNode(playerPos, bspMap)
 
 render(bspMap, playerPos)
