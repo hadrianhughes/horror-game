@@ -1,5 +1,5 @@
 import { vec2 } from 'gl-matrix'
-import { findPlayerNode, BSPMap, BSPMapNode } from '../bsp'
+import { findCameraNode, BSPMap, BSPMapNode } from '../bsp'
 import { residue } from '../math'
 import { rad, Quadrant, quadrant, destructVec } from '../math/geometry'
 import { eqSets } from '../math'
@@ -32,34 +32,35 @@ const isVectorInFOV = (v: vec2): boolean => {
   return residue(adjAngle, 2 * Math.PI) < FOV
 }
 
-export const renderNode = (node: BSPMapNode, player: vec2) => {
+export const renderNode = (node: BSPMapNode, camera: vec2) => {
   // Find walls between vertices that are visible in the camera
   for (const [v1, v2, color] of node.walls) {
     if (!color) continue
 
-    const i = vec2.subtract(vec2.create(), node.vertices[v1], player)
-    const j = vec2.subtract(vec2.create(), node.vertices[v2], player)
+    const i = vec2.subtract(vec2.create(), node.vertices[v1], camera)
+    const j = vec2.subtract(vec2.create(), node.vertices[v2], camera)
 
     const [ix, iy] = destructVec(i)
     const [jx, jy] = destructVec(j)
 
-    const ip = vec2.fromValues(ix, -iy)
-    const jp = vec2.fromValues(jx, -jy)
+    const ic = vec2.fromValues(ix, -iy)
+    const jc = vec2.fromValues(jx, -jy)
 
-    const qip = quadrant(ip)
-    const qjp = quadrant(jp)
+    const qic = quadrant(ic)
+    const qjc = quadrant(jc)
 
-    const wallAcrossFOV = eqSets(new Set([qip, qjp]), new Set([Quadrant.Q1, Quadrant.Q2]))
+    const wallAcrossFOV = eqSets(new Set([qic, qjc]), new Set([Quadrant.Q1, Quadrant.Q2]))
 
-    if (!(wallAcrossFOV || isVectorInFOV(ip) || isVectorInFOV(jp))) {
+    if (!(wallAcrossFOV || isVectorInFOV(ic) || isVectorInFOV(jc))) {
       continue
     }
 
-    console.log('render', color)
+    console.log(ic, jc)
+    //console.log('render', color)
   }
 }
 
-export const render = (map: BSPMap, player: vec2) => {
-  const firstNode = map.map[findPlayerNode(player, map)]
-  renderNode(firstNode, player)
+export const render = (map: BSPMap, camera: vec2) => {
+  const firstNode = map.map[findCameraNode(camera, map)]
+  renderNode(firstNode, camera)
 }

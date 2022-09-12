@@ -13,10 +13,10 @@ const canvasHeight = canvasWidth / canvasRatio
 c.width = canvasWidth
 c.height = canvasHeight
 
-const playerPos = vec2.fromValues(55, 50)
+const cameraPos = vec2.fromValues(55, 50)
 
 const map = loadMap(_map as MapJSON)
 
 const bspMap = mapTreeToMap(map)
 
-render(bspMap, playerPos)
+render(bspMap, cameraPos)

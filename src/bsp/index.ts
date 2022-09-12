@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import { PartialBSPMap, BSPNode, BSPMap, BSPMapNode, GameMap } from './types'
 import { roundTo } from '../math'
 
-const _findPlayerNode = (player: vec2, _map: BSPMap, id: string): string => {
+const _findCameraNode = (camera: vec2, _map: BSPMap, id: string): string => {
   const { map } = _map
 
   const node = map[id]
@@ -16,43 +16,43 @@ const _findPlayerNode = (player: vec2, _map: BSPMap, id: string): string => {
   const a = map[aid]
   const b = map[bid]
 
-  if (isPlayerInNode(player, a)) {
-    return _findPlayerNode(player, _map, aid)
+  if (isCameraInNode(camera, a)) {
+    return _findCameraNode(camera, _map, aid)
   }
 
-  if (isPlayerInNode(player, b)) {
-    return _findPlayerNode(player, _map, bid)
+  if (isCameraInNode(camera, b)) {
+    return _findCameraNode(camera, _map, bid)
   }
 
-  throw new Error(`Player location (${player[0], player[1]}) is not inside the map`)
+  throw new Error(`Camera location (${camera[0], camera[1]}) is not inside the map`)
 }
 
-export const findPlayerNode = (player: vec2, _map: BSPMap): string => {
+export const findCameraNode = (camera: vec2, _map: BSPMap): string => {
   const { roots, map } = _map
 
   const [aid, bid] = roots
   const a = map[aid]
   const b = map[bid]
 
-  if (isPlayerInNode(player, a)) {
-    return _findPlayerNode(player, _map, aid)
+  if (isCameraInNode(camera, a)) {
+    return _findCameraNode(camera, _map, aid)
   }
 
-  if (isPlayerInNode(player, b)) {
-    return _findPlayerNode(player, _map, bid)
+  if (isCameraInNode(camera, b)) {
+    return _findCameraNode(camera, _map, bid)
   }
 
-  throw new Error(`Player location (${player[0], player[1]}) is not inside the map.`)
+  throw new Error(`Camera location (${camera[0], camera[1]}) is not inside the map.`)
 }
 
-// The sum of the angle from player to vertices will be 360deg (2π) if the player is inside
-export const isPlayerInNode = (player: vec2, node: BSPMapNode): boolean => {
+// The sum of the angle from camera to vertices will be 360deg (2π) if the camera is inside
+export const isCameraInNode = (camera: vec2, node: BSPMapNode): boolean => {
   const angleSum: number = node.walls.reduce((acc, [v1, v2, _]) => {
     const i = node.vertices[v1]
     const j = node.vertices[v2]
 
-    const pi = vec2.subtract(vec2.create(), player, i)
-    const pj = vec2.subtract(vec2.create(), player, j)
+    const pi = vec2.subtract(vec2.create(), camera, i)
+    const pj = vec2.subtract(vec2.create(), camera, j)
 
     return acc + vec2.angle(pi, pj)
   }, 0)
