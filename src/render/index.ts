@@ -4,7 +4,10 @@ import { residue } from '../math'
 import { rad, Quadrant, quadrant, destructVec } from '../math/geometry'
 import { eqSets } from '../math'
 
-const FOV = rad(45)
+export const FOV = rad(45)
+
+// Pixel height of a segment when the camera is 1 unit away and the wall is 1 unit tall
+export const BASE_SEG_HEIGHT = 500
 
 const isVectorInFOV = (v: vec2): boolean => {
   const [x, y] = destructVec(v)
