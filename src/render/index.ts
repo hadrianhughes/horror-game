@@ -1,7 +1,7 @@
 import { vec2 } from 'gl-matrix'
 import { findCameraNode, BSPMap, BSPMapNode } from '../bsp'
 import { residue } from '../math'
-import { rad, Quadrant, quadrant, destructVec } from '../math/geometry'
+import { rad, Quadrant, quadrant, x, y } from '../math/geometry'
 import { eqSets } from '../math'
 import { RenderContext } from './types'
 
@@ -22,8 +22,9 @@ export const initContext = (canvas: HTMLCanvasElement): RenderContext => {
 }
 
 const isVectorInFOV = (v: vec2): boolean => {
-  const [x, y] = destructVec(v)
-  const theta = Math.atan2(Math.abs(x), Math.abs(y))
+  const _x = x(v)
+  const _y = y(v)
+  const theta = Math.atan2(Math.abs(_x), Math.abs(_y))
 
   const q = quadrant(v)
   const ccAngle: number = (() => {
@@ -52,11 +53,8 @@ export const renderNode = (ctx: RenderContext, node: BSPMapNode, camera: vec2) =
     const i = vec2.subtract(vec2.create(), node.vertices[v1], camera)
     const j = vec2.subtract(vec2.create(), node.vertices[v2], camera)
 
-    const [ix, iy] = destructVec(i)
-    const [jx, jy] = destructVec(j)
-
-    const ic = vec2.fromValues(ix, -iy)
-    const jc = vec2.fromValues(jx, -jy)
+    const ic = vec2.fromValues(x(i), -y(i))
+    const jc = vec2.fromValues(x(j), -y(j))
 
     const qic = quadrant(ic)
     const qjc = quadrant(jc)

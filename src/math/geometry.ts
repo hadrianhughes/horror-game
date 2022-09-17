@@ -4,7 +4,8 @@ export const deg = (rads: number): number => rads * (180 / Math.PI)
 
 export const rad = (degs: number): number => degs * (Math.PI / 180)
 
-export const destructVec = (v: vec2): [number, number] => [v[0], v[1]]
+export const x = (v: vec2): number => v[0]
+export const y = (v: vec2): number => v[1]
 
 // Starting from the vertical
 export enum Quadrant {
@@ -15,10 +16,11 @@ export enum Quadrant {
 }
 
 export const quadrant = (v: vec2): Quadrant => {
-  const [x, y] = destructVec(v)
+  const _x = x(v)
+  const _y = y(v)
 
-  if (x >= 0 && y >= 0) return Quadrant.Q1
-  if (x < 0 && y >= 0) return Quadrant.Q2
-  if (x < 0 && y < 0) return Quadrant.Q3
-  if (x >= 0 && y < 0) return Quadrant.Q4
+  if (_x >= 0 && _y >= 0) return Quadrant.Q1
+  if (_x < 0 && _y >= 0) return Quadrant.Q2
+  if (_x < 0 && _y < 0) return Quadrant.Q3
+  if (_x >= 0 && _y < 0) return Quadrant.Q4
 }
