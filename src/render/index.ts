@@ -3,11 +3,23 @@ import { findCameraNode, BSPMap, BSPMapNode } from '../bsp'
 import { residue } from '../math'
 import { rad, Quadrant, quadrant, destructVec } from '../math/geometry'
 import { eqSets } from '../math'
+import { RenderContext } from './types'
 
 export const FOV = rad(45)
 
 // Pixel height of a segment when the camera is 1 unit away and the wall is 1 unit tall
 export const BASE_SEG_HEIGHT = 500
+
+export const CANVAS_RATIO = 16 / 9
+
+export const initContext = (canvas: HTMLCanvasElement): RenderContext => {
+  canvas.width = window.innerWidth
+  canvas.height = window.innerWidth / CANVAS_RATIO
+
+  const ctx = canvas.getContext('2d')
+
+  return { canvas, ctx }
+}
 
 const isVectorInFOV = (v: vec2): boolean => {
   const [x, y] = destructVec(v)
@@ -32,7 +44,7 @@ const isVectorInFOV = (v: vec2): boolean => {
   return residue(adjAngle, 2 * Math.PI) < FOV
 }
 
-export const renderNode = (node: BSPMapNode, camera: vec2) => {
+export const renderNode = (ctx: RenderContext, node: BSPMapNode, camera: vec2) => {
   // Find walls between vertices that are visible in the camera
   for (const [v1, v2, color] of node.walls) {
     if (!color) continue
@@ -60,7 +72,7 @@ export const renderNode = (node: BSPMapNode, camera: vec2) => {
   }
 }
 
-export const render = (map: BSPMap, camera: vec2) => {
+export const render = (ctx: RenderContext, map: BSPMap, camera: vec2) => {
   const firstNode = map.map[findCameraNode(camera, map)]
-  renderNode(firstNode, camera)
+  renderNode(ctx, firstNode, camera)
 }
