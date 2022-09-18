@@ -1,11 +1,12 @@
 import { vec2 } from 'gl-matrix'
 import { findCameraNode, BSPMap, BSPMapNode } from '../bsp'
-import { residue } from '../math'
 import { rad, Quadrant, quadrant, x, y } from '../math/geometry'
 import { eqSets } from '../math'
 import { RenderContext } from './types'
 
 export const FOV = rad(45)
+export const RIGHT_FOV_BOUND = Math.PI / 2 - FOV / 2
+export const LEFT_FOV_BOUND = Math.PI / 2 + FOV / 2
 
 // Pixel height of a segment when the camera is 1 unit away and the wall is 1 unit tall
 export const BASE_SEG_HEIGHT = 500
@@ -24,25 +25,40 @@ export const initContext = (canvas: HTMLCanvasElement): RenderContext => {
 const isVectorInFOV = (v: vec2): boolean => {
   const _x = x(v)
   const _y = y(v)
-  const theta = Math.atan2(Math.abs(_x), Math.abs(_y))
+  const theta = Math.atan2(Math.abs(_y), Math.abs(_x))
 
   const q = quadrant(v)
-  const ccAngle: number = (() => {
+
+  if (!(new Set([Quadrant.Q1, Quadrant.Q2]).has(q))) {
+    return false
+  }
+
+  const fullAngle: number = (() => {
     switch (q) {
       case Quadrant.Q1:
         return theta
       case Quadrant.Q2:
         return Math.PI - theta
-      case Quadrant.Q3:
-        return Math.PI + theta
-      case Quadrant.Q4:
-        return 2 * Math.PI - theta
     }
   })()
 
-  const adjAngle = ccAngle + FOV / 2
+  return fullAngle > RIGHT_FOV_BOUND && fullAngle < LEFT_FOV_BOUND
+}
 
-  return residue(adjAngle, 2 * Math.PI) < FOV
+export const renderWallInside = (ctx: RenderContext, v1: vec2, v2: vec2) => {
+  console.log('render inside')
+}
+
+export const renderWallAcrossFOV = (ctx: RenderContext, v1: vec2, v2: vec2) => {
+  console.log('render across')
+}
+
+export const renderWallAtSide = (ctx: RenderContext, vInside: vec2, vOutside: vec2) => {
+  if (x(vOutside) < 0) {
+    console.log('render left side')
+  } else {
+    console.log('render right side')
+  }
 }
 
 export const renderNode = (ctx: RenderContext, node: BSPMapNode, camera: vec2) => {
@@ -59,14 +75,18 @@ export const renderNode = (ctx: RenderContext, node: BSPMapNode, camera: vec2) =
     const qic = quadrant(ic)
     const qjc = quadrant(jc)
 
-    const wallAcrossFOV = eqSets(new Set([qic, qjc]), new Set([Quadrant.Q1, Quadrant.Q2]))
+    const iInFOV = isVectorInFOV(ic)
+    const jInFOV = isVectorInFOV(jc)
 
-    if (!(wallAcrossFOV || isVectorInFOV(ic) || isVectorInFOV(jc))) {
-      continue
+    if (iInFOV && jInFOV) {
+      renderWallInside(ctx, ic, jc)
+    } else if (iInFOV) {
+      renderWallAtSide(ctx, ic, jc)
+    } else if (jInFOV) {
+      renderWallAtSide(ctx, jc, ic)
+    } else if (eqSets(new Set([qic, qjc]), new Set([Quadrant.Q1, Quadrant.Q2]))) {
+      renderWallAcrossFOV(ctx, ic, jc)
     }
-
-    console.log(ic, jc)
-    //console.log('render', color)
   }
 }
 
